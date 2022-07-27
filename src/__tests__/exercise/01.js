@@ -10,26 +10,39 @@ import Counter from '../../components/counter'
 // https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#configuring-your-testing-environment
 // Luckily, it's handled for you by React Testing Library :)
 global.IS_REACT_ACT_ENVIRONMENT = true
+describe('counter component', () => {
+  let div, decrement, increment
 
-test('counter increments and decrements when the buttons are clicked', () => {
-  // 🐨 create a div to render your component to (💰 document.createElement)
-  //
-  // 🐨 append the div to document.body (💰 document.body.append)
-  //
-  // 🐨 use createRoot to render the <Counter /> to the div
-  // 🐨 get a reference to the increment and decrement buttons:
-  //   💰 div.querySelectorAll('button')
-  // 🐨 get a reference to the message div:
-  //   💰 div.firstChild.querySelector('div')
-  //
-  // 🐨 expect the message.textContent toBe 'Current count: 0'
-  // 🐨 click the increment button (💰 act(() => increment.click()))
-  // 🐨 assert the message.textContent
-  // 🐨 click the decrement button (💰 act(() => decrement.click()))
-  // 🐨 assert the message.textContent
-  //
-  // 🐨 cleanup by removing the div from the page (💰 div.remove())
-  // 🦉 If you don't cleanup, then it could impact other tests and/or cause a memory leak
+  beforeAll(() => {
+    div = document.createElement('div');
+    decrement = div.querySelectorAll('button')[0];
+    increment = div.querySelectorAll('button')[1];
+    document.body.append(div);
+    const root = creasteRoot(div);
+    act(() => root.render(<Counter />))
+  })
+
+  afterAll(() => {
+    div.remove();
+  })
+})
+
+
+it('counter increments and decrements when the buttons are clicked', () => {
+  const  message= document.createElement('div');
+
+  document.body.append(div);
+
+  const root = createRoot(div);
+  act(() => root.render(<Counter />))
+  const message = div.firstChild.querySelector('div');
+
+  expect(message.textContent).toBe('Current count: 0')
+  act(() => increment.click());
+  expect(message.textContent).toBe('Current count: 1');
+  act(() => decrement.click())
+  expect(message.textContent).toBe('Current count: 0');
+  div.remove();
 })
 
 /* eslint no-unused-vars:0 */
